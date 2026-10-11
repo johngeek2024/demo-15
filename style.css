@@ -1,0 +1,3968 @@
+/* ==========================================================================
+   SISTEMA DE DISEÑO DE LUJO - INVITACIÓN DE 15 AÑOS DE VALENTINA EJEMPLO
+   Estética: La Bella y la Bestia (Gótica-Romántica Realista y Cinemática)
+   ========================================================================== */
+
+/* VARIABLES DE DISEÑO (GOLDEN SYSTEM) */
+:root {
+    /* Paleta de Colores HSL y Hex */
+    --bg-deep-oled: #020205;
+    --bg-midnight: #04050f;
+    --gold-primary: #dfb76c;
+    --gold-dark: #c59b27;
+    --gold-light: #f5e4bd;
+    --red-velvet: #8c0f1e;
+    --red-glowing: #b91c1c;
+    --text-light: #f3f4f6;
+    --text-muted: #9ca3af;
+    --glass-background: rgba(5, 7, 18, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.6);
+    
+    /* Tipografías */
+    --font-heading-decorative: 'Cinzel Decorative', Georgia, serif;
+    --font-heading: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    
+    /* Transiciones fluidas avanzadas (Mass & Spring physics simulation) */
+    --transition-premium: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-haptic: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* RESET E INSTALACIÓN BASE */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-deep-oled);
+    color: var(--text-light);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    min-height: 100dvh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body.no-scroll {
+    overflow: hidden !important;
+    height: 100dvh !important;
+    touch-action: none;
+}
+
+/* Ocultar barra de scroll pero mantener funcionalidad elegante */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-deep-oled);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-primary);
+}
+
+/* ==========================================================================
+   COMPONENTES CORE Y ESTRUCTURAS MÁGICAS
+   ========================================================================== */
+
+/* FONDO MANSION CINEMÁTICO - ENTRADA Y PARALAJE 100% IMPERMEABLES */
+.mansion-parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: radial-gradient(ellipse at 50% 30%, #2a1030 0%, #120818 55%, #07040b 100%);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    
+    /* Estado inicial de ensueño pre-entrada */
+    opacity: 0.65;
+    filter: blur(4px) brightness(0.6);
+    transform: scale(1.28) rotate(0.5deg);
+    transform-origin: center center;
+    
+    /* Transiciones majestuosas de entrada */
+    transition: 
+        transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), 
+        filter 3.0s cubic-bezier(0.16, 1, 0.3, 1), 
+        opacity 3.0s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, filter, opacity;
+}
+
+/* Estado activo revelado */
+body.invitation-active .mansion-parallax-bg {
+    opacity: 0.95;
+    filter: blur(0px) brightness(1);
+    transform: scale(1.12) rotate(0deg);
+}
+
+/* Filtro Viñeta de Gran Lujo - Profundidad Cinemática con Tintes de Terciopelo */
+.vignette-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, 
+        rgba(2, 2, 5, 0.05) 0%, 
+        rgba(4, 5, 15, 0.65) 50%, 
+        rgba(14, 6, 12, 0.88) 80%, 
+        rgba(2, 2, 5, 0.98) 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* CANVAS DE BRILLOS DE ORO FLOATING */
+#sparkles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* PRECARGADOR MÁGICO (Rose Preloader) */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Deepest romantic luxury vignette background combining OLED black with dark navy and velvet rose glow */
+    background: radial-gradient(circle at 50% 50%, rgba(14, 6, 12, 0.98) 0%, rgba(4, 5, 15, 0.98) 60%, #020205 100%);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+    overflow: hidden;
+}
+
+.preloader-content {
+    text-align: center;
+    max-width: 320px;
+    padding: 20px;
+}
+
+.rose-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    position: relative;
+}
+
+.rose-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 10px rgba(185, 28, 28, 0.5));
+}
+
+/* --- ELEVACIÓN PREMIUM: LA CÚPULA DE CRISTAL DE LA ROSA ENCANTADA (PRELOADER ROSE DOME) --- */
+.preloader-rose-dome {
+    width: 170px;
+    height: auto;
+    margin: 0 auto 25px;
+    position: relative;
+    z-index: 10;
+}
+
+.preloader-dome-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Efecto latido de luz mágica en el vitral de fondo del preloader */
+.dome-backlight {
+    animation: domePulse 3s infinite ease-in-out;
+}
+
+@keyframes domePulse {
+    0%, 100% {
+        r: 35px;
+        opacity: 0.65;
+        fill-opacity: 0.65;
+    }
+    50% {
+        r: 45px;
+        opacity: 0.95;
+        fill-opacity: 0.95;
+    }
+}
+
+.dome-sparkle {
+    animation: sparkleBreath 4s infinite alternate ease-in-out;
+}
+.dome-sparkle:nth-child(even) {
+    animation-delay: 2s;
+}
+
+@keyframes sparkleBreath {
+    0% { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* --- ELEVACIÓN PREMIUM: LUZ CONICA CELESTIAL --- */
+.preloader-light-beam {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        rgba(223, 183, 108, 0.08) 0%, 
+        rgba(185, 28, 28, 0.03) 50%, 
+        transparent 100%);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+    pointer-events: none;
+    z-index: 1;
+    animation: beamShimmer 8s infinite alternate ease-in-out;
+}
+
+@keyframes beamShimmer {
+    0% { opacity: 0.6; width: 300px; }
+    100% { opacity: 1; width: 350px; }
+}
+
+.preloader-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--gold-primary);
+    margin-bottom: 20px;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px rgba(223, 183, 108, 0.25);
+}
+
+.loader-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(223, 183, 108, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px auto 10px;
+    box-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.6),
+        inset 0 1px 2px rgba(0,0,0,0.8);
+    position: relative;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-primary) 50%, var(--gold-light) 100%);
+    box-shadow: 0 0 8px var(--gold-primary);
+    transition: width 0.1s ease-out;
+    border-radius: 10px;
+}
+
+.loader-percent {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+}
+
+/* ==========================================================================
+   ARQUITECTURA DE DOBLE BISEL (DOPPELRAND ENCLOSURES)
+   ========================================================================== */
+.double-bezel-card {
+    position: relative;
+    padding: 8px; /* El canal/bisel exterior */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 2rem;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: var(--transition-premium);
+    overflow: hidden;
+}
+
+.double-bezel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transform: rotate(30deg);
+    transition: var(--transition-premium);
+    pointer-events: none;
+}
+
+.double-bezel-card:hover::before {
+    left: 100%;
+    transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.double-bezel-card .card-inner {
+    background: var(--glass-background);
+    border: 1px solid var(--glass-border);
+    border-radius: calc(2rem - 8px);
+    padding: 2.2rem 1.8rem;
+    box-shadow: 
+        inset 0 1px 1px rgba(255, 255, 255, 0.08),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.4);
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   WIDGETS INTERACTIVOS DE ALTA GAMA
+   ========================================================================== */
+
+/* REPRODUCTOR DE AUDIO FLOTANTE (Floating Music Island) */
+#music-island {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 999;
+    transition: var(--transition-premium);
+}
+
+#music-toggle-btn {
+    background: rgba(5, 7, 18, 0.75);
+    border: 1px solid rgba(223, 183, 108, 0.25);
+    border-radius: 50px;
+    padding: 8px 16px 8px 12px;
+    color: var(--gold-primary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: var(--transition-haptic);
+}
+
+#music-toggle-btn:hover {
+    border-color: var(--gold-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(223, 183, 108, 0.15);
+}
+
+#music-toggle-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.music-wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    width: 14px;
+    height: 14px;
+}
+
+.music-wave .bar {
+    width: 2px;
+    height: 20%;
+    background-color: var(--gold-primary);
+    border-radius: 1px;
+    transition: height 0.3s ease;
+}
+
+/* Animación del ecualizador activado */
+#music-island.playing .music-wave .bar {
+    animation: soundWave 1.2s ease infinite alternate;
+}
+#music-island.playing .music-wave .bar:nth-child(2) { animation-delay: 0.2s; }
+#music-island.playing .music-wave .bar:nth-child(3) { animation-delay: 0.4s; }
+#music-island.playing .music-wave .bar:nth-child(4) { animation-delay: 0.1s; }
+
+@keyframes soundWave {
+    0% { height: 20%; }
+    100% { height: 100%; }
+}
+
+.music-icon {
+    width: 16px;
+    height: 16px;
+    animation: floatSlow 6s infinite ease-in-out;
+}
+
+.music-island-hidden {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    pointer-events: none;
+}
+
+/* BOTÓN ISLA MAGNÉTICO (Nested CTA Island Button) */
+.island-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+    color: var(--bg-deep-oled);
+    padding: 10px 10px 10px 22px;
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 
+        0 15px 30px rgba(197, 155, 39, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: var(--transition-haptic);
+}
+
+.island-button .btn-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--bg-deep-oled);
+    color: var(--gold-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: var(--transition-haptic);
+}
+
+.island-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(197, 155, 39, 0.35);
+}
+
+.island-button:hover .btn-icon-wrapper {
+    transform: rotate(45deg);
+    background-color: var(--text-light);
+    color: var(--bg-deep-oled);
+}
+
+.island-button:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* ==========================================================================
+   SECCIONES Y COREOGRAFÍA DE SCROLL (MOBILE FIRST)
+   ========================================================================== */
+
+.invitation-container {
+    max-width: 480px; /* Limitar el ancho para optimización de smartphone */
+    margin: 0 auto;
+    padding: 0 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* SECCIÓN 1: PORTADA REAL (HERO) */
+.hero-section {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 60px;
+    position: relative;
+}
+
+.hero-content {
+    text-align: center;
+    width: 100%;
+}
+
+/* Ocultar elementos inicialmente para la animación fluida de entrada */
+.hero-content .eyebrow {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.2s;
+}
+
+.hero-content .monogram-container {
+    opacity: 0;
+    transform: scale(0.5) rotate(-180deg);
+    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.4s;
+}
+
+.hero-content .girl-name {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.6s;
+}
+
+.hero-content .title-sub {
+    opacity: 0;
+    letter-spacing: 0.1em;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.8s;
+}
+
+.hero-content .portrait-container {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 1.0s;
+}
+
+.hero-content .scroll-indicator {
+    opacity: 0;
+    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 1.2s;
+}
+
+/* Revelar elementos con animaciones mágicas cinemáticas de alta gama */
+.invitation-revealed .hero-content .eyebrow {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.invitation-revealed .hero-content .monogram-container {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    animation: monogramReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.invitation-revealed .hero-content .girl-name {
+    opacity: 1;
+    transform: translateY(0);
+    animation: nameGlowReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.invitation-revealed .hero-content .title-sub {
+    opacity: 1;
+    letter-spacing: 0.3em;
+    animation: titleSubReveal 3.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.invitation-revealed .hero-content .portrait-container {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: portraitReveal 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.invitation-revealed .hero-content .scroll-indicator {
+    opacity: 0.7;
+}
+
+/* DESTELLO MÁGICO DE ENTRADA (Cinematic Radial Flash) */
+#magical-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 235, 170, 0.9) 0%, rgba(223, 183, 108, 0.45) 25%, rgba(140, 15, 30, 0.12) 55%, transparent 75%);
+    mix-blend-mode: screen;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.4);
+    filter: blur(10px);
+}
+
+#magical-flash.active {
+    animation: flashDisappear 2.4s forwards cubic-bezier(0.15, 0.85, 0.3, 1);
+}
+
+/* DEFINICIÓN DE ANIMACIONES MÁGICAS EN KEYFRAMES */
+@keyframes flashDisappear {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+        filter: blur(0px);
+    }
+    15% {
+        opacity: 1;
+        transform: scale(1.0);
+        filter: blur(5px);
+    }
+    35% {
+        opacity: 0.95;
+        transform: scale(1.4);
+        filter: blur(15px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.6);
+        filter: blur(35px);
+    }
+}
+
+@keyframes monogramReveal {
+    0% {
+        transform: scale(0.3) rotate(-270deg);
+        filter: blur(12px) brightness(3);
+        box-shadow: 0 0 50px rgba(223, 183, 108, 0.9);
+    }
+    45% {
+        transform: scale(1.15) rotate(15deg);
+        filter: blur(0px) brightness(1.6);
+        box-shadow: 0 0 35px rgba(223, 183, 108, 0.75);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: blur(0px) brightness(1);
+        box-shadow: 0 0 0px rgba(223, 183, 108, 0);
+    }
+}
+
+@keyframes nameGlowReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(35px) scale(0.95);
+        text-shadow: 0 0 45px rgba(223, 183, 108, 0.9), 0 0 90px rgba(223, 183, 108, 0.7);
+        color: #fff;
+    }
+    35% {
+        opacity: 1;
+        transform: translateY(-5px) scale(1.02);
+        text-shadow: 0 0 25px rgba(223, 183, 108, 0.95), 0 0 50px rgba(140, 15, 30, 0.85);
+        color: #fff;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        text-shadow: 
+            0 4px 10px rgba(0, 0, 0, 0.9),
+            0 0 15px rgba(223, 183, 108, 0.25);
+    }
+}
+
+@keyframes titleSubReveal {
+    0% {
+        opacity: 0;
+        letter-spacing: 0.05em;
+        filter: blur(5px);
+    }
+    40% {
+        opacity: 0.5;
+        letter-spacing: 0.15em;
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        letter-spacing: 0.3em;
+        filter: blur(0px);
+    }
+}
+
+@keyframes portraitReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.9);
+        filter: blur(20px) brightness(2.2) contrast(1.25);
+        box-shadow: 0 0 60px rgba(223, 183, 108, 0.75);
+    }
+    45% {
+        opacity: 0.85;
+        filter: blur(6px) brightness(1.4) contrast(1.15);
+        box-shadow: 0 0 35px rgba(223, 183, 108, 0.45);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0px) brightness(1.0) contrast(1.0);
+        box-shadow: none;
+    }
+}
+
+.eyebrow {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold-primary);
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.monogram-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monogram-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px double var(--gold-primary);
+    border-radius: 50%;
+    animation: ringRotate 20s linear infinite;
+}
+
+@keyframes ringRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.monogram-letters {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: -2px;
+    text-shadow: 0 0 10px rgba(223, 183, 108, 0.4);
+}
+
+.girl-name {
+    font-family: var(--font-heading-decorative);
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text-light);
+    text-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.9),
+        0 0 15px rgba(223, 183, 108, 0.2);
+    margin-bottom: 8px;
+}
+
+.title-sub {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--gold-primary);
+    margin-bottom: 35px;
+}
+
+.portrait-container {
+    width: 220px;
+    height: 290px;
+    margin: 0 auto 55px; /* Extra margin for Victorian ornaments */
+    position: relative;
+}
+
+.portrait-shell {
+    padding: 12px;
+    /* Gradient simulating a heavy carved gold Victorian frame */
+    background: linear-gradient(145deg, 
+        var(--gold-light) 0%, 
+        var(--gold-primary) 30%, 
+        var(--gold-dark) 50%, 
+        var(--gold-primary) 70%, 
+        var(--gold-light) 100%);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 130px;
+    box-shadow: 
+        0 30px 60px rgba(0,0,0,0.9),
+        inset 0 0 10px rgba(255,255,255,0.7),
+        inset 0 0 30px rgba(60, 30, 0, 0.9);
+    height: 100%;
+    position: relative;
+}
+
+/* Ornato superior estilo época victoriana / francesa */
+.portrait-shell::before {
+    content: '⚜';
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    color: var(--gold-light);
+    background: -webkit-linear-gradient(top, var(--gold-light), var(--gold-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 5px 8px rgba(0,0,0,0.9));
+    z-index: 10;
+    line-height: 1;
+}
+
+/* Ornato inferior estilo época victoriana / francesa */
+.portrait-shell::after {
+    content: '⚜';
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    font-size: 3rem;
+    color: var(--gold-light);
+    background: -webkit-linear-gradient(bottom, var(--gold-light), var(--gold-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 -5px 8px rgba(0,0,0,0.9));
+    z-index: 10;
+    line-height: 1;
+}
+
+.portrait-core {
+    background: linear-gradient(185deg, #090e24, #03040b);
+    border: 3px solid #4a2f13;
+    border-radius: 118px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 30px rgba(0,0,0,1);
+}
+
+.portrait-placeholder-icon {
+    font-family: var(--font-heading-decorative);
+    font-size: 3rem;
+    color: var(--gold-dark);
+    opacity: 0.3;
+}
+
+.portrait-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 30%, transparent 40%, rgba(2, 2, 5, 0.8) 95%);
+    pointer-events: none;
+}
+
+.portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center 10%; /* Center the girl's face inside the frame */
+    filter: contrast(1.1) saturate(1.15) brightness(1.05);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portrait-core:hover .portrait-img {
+    transform: scale(1.06);
+}
+
+/* Indicador de scroll */
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+}
+
+.scroll-text {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.scroll-arrow {
+    font-size: 1rem;
+    color: var(--gold-primary);
+    animation: arrowBounce 1.5s infinite ease-in-out;
+}
+
+@keyframes arrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+}
+
+/* SECCIÓN 2: EL LIBRO DE ORO ENCANTADO (3D OPEN STORYBOOK) */
+.section-luxury-editorial {
+    padding: 100px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background: transparent;
+    perspective: 1200px; /* Para micro-interacciones 3D en hover */
+}
+
+/* Royal Book Wrapper */
+.royal-book-wrapper {
+    width: 92%;
+    max-width: 950px; /* Ancho extendido para pliego de doble página */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Bisagras y Cerrosjos Mecánicos SVG */
+.scroll-rod {
+    width: 102%;
+    height: 36px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.book-top-border, .book-bottom-border {
+    flex-grow: 1;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold-primary) 30%, var(--gold-light) 50%, var(--gold-primary) 70%, transparent 100%);
+    box-shadow: 0 2px 8px rgba(223, 183, 108, 0.45);
+    border-radius: 2px;
+}
+
+.rod-finial {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 12;
+}
+
+.gold-hinge-svg {
+    width: 100%;
+    height: 100%;
+    color: var(--gold-primary);
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55));
+}
+
+.rod-top {
+    margin-bottom: -15px; /* Superposición exacta */
+}
+
+.rod-bottom {
+    margin-top: -15px;
+}
+
+/* Cuerpo del Libro Abierto */
+.book-body {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: 0px; /* Controlado por JS */
+    opacity: 1;
+    border-radius: 12px;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.95);
+}
+
+.royal-book-wrapper:hover .book-body {
+    transform: translateY(-5px) rotateX(1deg); /* Elevación sutil táctil */
+}
+
+/* Cubierta de Terciopelo/Cuero Pequeño Underlay */
+.book-cover-underlay {
+    position: absolute;
+    inset: 0px;
+    background: radial-gradient(circle at center, #0c0f24 0%, #03040a 100%);
+    border: 2px solid var(--gold-primary);
+    border-radius: 12px;
+    box-shadow: 
+        inset 0 0 45px rgba(223, 183, 108, 0.28),
+        0 15px 35px rgba(0, 0, 0, 0.85);
+    z-index: 1;
+}
+
+/* Textura Microscópica de Papel / Algodón */
+.scroll-paper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 3;
+}
+
+/* Pliego de Páginas Extendido */
+.book-pages-spread {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 !important; /* Manejado por las páginas individuales */
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    opacity: 0;
+    filter: blur(15px);
+    transform: translateY(25px) scale(0.98);
+    will-change: opacity, filter, transform;
+}
+
+/* Páginas Individuales */
+.book-page {
+    flex: 1;
+    min-height: 520px;
+    padding: 4.5rem 3.2rem;
+    background: radial-gradient(circle at center, #fdfcfa 0%, #f4ebd5 100%);
+    box-shadow: inset 0 0 50px rgba(223, 183, 108, 0.12);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: var(--transition-premium);
+    overflow: hidden;
+}
+
+/* Crease (Sombra de pliegue central del lomo del libro) */
+.page-left {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-right: 1px solid rgba(0,0,0,0.18);
+    box-shadow: 
+        inset -25px 0 35px rgba(0,0,0,0.085),
+        inset 0 0 50px rgba(223, 183, 108, 0.1);
+}
+
+.page-right {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-left: 1px solid rgba(0,0,0,0.18);
+    box-shadow: 
+        inset 25px 0 35px rgba(0,0,0,0.085),
+        inset 0 0 50px rgba(223, 183, 108, 0.1);
+}
+
+/* Ornatos de Esquinas Góticas en cada Página */
+.page-corner-ornament {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--gold-dark);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.ornament-tl { top: 22px; left: 22px; border-right: none; border-bottom: none; }
+.ornament-tr { top: 22px; right: 22px; border-left: none; border-bottom: none; }
+.ornament-bl { bottom: 22px; left: 22px; border-right: none; border-top: none; }
+.ornament-br { bottom: 22px; right: 22px; border-left: none; border-top: none; }
+
+/* Cinta Divisora de Seda Real (Book Bookmark Ribbon) */
+.book-bookmark-ribbon {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 108%;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ribbon-line {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #8c0f1e 0%, #b91c1c 45%, #e11d48 60%, #8c0f1e 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.65), 1px 0 2px rgba(255,255,255,0.1);
+}
+
+.ribbon-tail {
+    position: absolute;
+    bottom: -16px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid #b91c1c;
+    border-right: 7px solid #8c0f1e;
+    border-bottom: 16px solid transparent;
+}
+
+.ribbon-rose-charm {
+    position: absolute;
+    bottom: -32px;
+    font-size: 1.65rem;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.75));
+    animation: floatRibbonRose 5s ease-in-out infinite;
+}
+
+@keyframes floatRibbonRose {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    50% { transform: translateY(-6px) scale(1.08) rotate(5deg); }
+}
+
+/* Tipografía de Lujo sobre el Papel del Libro (Dark Navy Ink) */
+.book-page .luxury-eyebrow {
+    font-family: var(--font-heading-decorative);
+    color: #7c5c24;
+    background: rgba(124, 92, 36, 0.08);
+    border: 1px solid rgba(124, 92, 36, 0.35);
+    margin-bottom: 0.9rem;
+    align-self: center;
+    box-shadow: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+}
+
+.book-page .luxury-title {
+    font-family: var(--font-heading);
+    color: #03040a;
+    font-size: 2.3rem; /* Ajustado para simetría bilateral */
+    font-weight: 700;
+    text-shadow: none;
+    margin-bottom: 1.3rem;
+    letter-spacing: 0.02em;
+}
+
+.book-page .luxury-body {
+    font-family: var(--font-heading);
+    color: #060814;
+    font-size: 1.22rem; /* Tamaño imperial altamente legible */
+    line-height: 1.8;
+    font-weight: 500;
+}
+
+.book-page .luxury-divider-line {
+    background: linear-gradient(90deg, transparent, rgba(124, 92, 36, 0.4), transparent);
+}
+
+.book-page .luxury-divider-icon {
+    color: #7c5c24;
+    opacity: 0.85;
+}
+
+/* Letra Capital Medieval Iluminada */
+.blessing-text-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.illuminated-drop-cap {
+    float: left;
+    margin: 4px 16px 2px 0;
+    width: 70px;
+    height: 70px;
+    line-height: 1;
+}
+
+.drop-cap-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 5px rgba(124,92,36,0.3));
+}
+
+.parents-section {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.book-page .luxury-parents-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(6, 8, 20, 0.68);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+}
+
+.luxury-parents-names-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.luxury-parents-names-container .parent-name {
+    font-family: 'Cinzel Decorative', serif;
+    color: #7c5c24;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+    display: block;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.luxury-parents-names-container .parents-divider-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin: 2px 0;
+}
+
+.luxury-parents-names-container .parents-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c5a059, transparent);
+    width: 45px;
+}
+
+.luxury-parents-names-container .parents-ampersand {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: #c5a059;
+    font-weight: bold;
+    font-size: 1.45rem;
+    line-height: 1;
+}
+
+/* Firma Real en la Página Derecha */
+.book-page .luxury-signature {
+    font-family: var(--font-heading-decorative);
+    font-size: 2.3rem;
+    color: #7c5c24;
+    margin-top: 1.5rem;
+    text-align: right;
+    align-self: flex-end;
+    padding-right: 1rem;
+    text-shadow: none;
+}
+
+/* Marca de Agua de la Rosa */
+.page-watermark-rose {
+    position: absolute;
+    bottom: -15px;
+    right: -10px;
+    width: 160px;
+    height: 160px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.watermark-rose-svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsividad para el Libro de Oro */
+@media (max-width: 768px) {
+    .royal-book-wrapper {
+        width: 95%;
+        max-width: 100%;
+    }
+    
+    .scroll-rod {
+        width: 104%;
+    }
+    
+    .book-pages-spread {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .book-page {
+        min-height: auto;
+        padding: 3.5rem 1.8rem;
+    }
+    
+    .page-left {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.12);
+        box-shadow: 
+            inset 0 -20px 25px rgba(0,0,0,0.05),
+            inset 0 0 40px rgba(223, 183, 108, 0.08);
+    }
+    
+    .page-right {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 0;
+        border-left: none;
+        border-top: 1px solid rgba(0,0,0,0.12);
+        box-shadow: 
+            inset 0 20px 25px rgba(0,0,0,0.05),
+            inset 0 0 40px rgba(223, 183, 108, 0.08);
+    }
+    
+    .book-bookmark-ribbon {
+        display: none; /* Se oculta para no interferir en la lectura apilada */
+    }
+    
+    .book-page .luxury-title {
+        font-size: 1.85rem;
+    }
+    
+    .illuminated-drop-cap {
+        width: 58px;
+        height: 58px;
+        margin: 2px 12px 0 0;
+    }
+    
+    .drop-cap-svg text {
+        font-size: 38px;
+        y: 40px;
+    }
+    
+    .luxury-parents-names-container .parent-name {
+        font-size: 1.12rem;
+    }
+    .luxury-parents-names-container .parents-ampersand {
+        font-size: 1.3rem;
+    }
+    
+    .book-page .luxury-signature {
+        font-size: 2.1rem;
+        margin-top: 1rem;
+    }
+    
+    .page-watermark-rose {
+        width: 120px;
+        height: 120px;
+        bottom: -10px;
+        right: -10px;
+    }
+}
+
+.cursive-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #5c350c;
+    letter-spacing: 0.02em;
+}
+
+.book-text {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    text-align: center;
+    color: #442a10;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.italic-text {
+    font-style: italic;
+}
+
+.rose-divider {
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 15px 0;
+    color: var(--red-velvet);
+}
+
+.parents-intro {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: #79552d;
+    margin-bottom: 5px;
+}
+
+.parents-names {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    color: #5c350c;
+}
+
+.book-signature {
+    font-family: var(--font-heading-decorative);
+    font-size: 2.2rem;
+    text-align: right;
+    margin-top: 15px;
+    color: var(--red-velvet);
+    padding-right: 20px;
+}
+
+/* Foto bestia decorativa en el libro */
+.character-beast-container {
+    width: 70px;
+    height: 70px;
+    margin: 20px auto 0;
+    border-radius: 50%;
+    border: 2px solid #7c582c;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.character-inline-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* SECCIÓN 3: CUENTA REGRESIVA CON DIN-DON */
+.section-countdown {
+    padding: 60px 0;
+}
+
+.countdown-bento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.section-title {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.6rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+}
+
+.text-gold {
+    color: var(--gold-primary);
+    text-shadow: 0 0 10px rgba(223, 183, 108, 0.25);
+}
+
+.section-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.countdown-layout-container {
+    position: relative;
+    width: 100%;
+    padding-top: 60px; /* Espacio para Din-Don */
+}
+
+/* Animaciones flotantes sutiles de personajes */
+.float-animation {
+    animation: floatSlow 8s infinite ease-in-out;
+}
+
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+.character-cogsworth {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    width: 105px;
+    z-index: 2;
+}
+
+.character-character-img {
+    width: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--gold-primary);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    background-color: var(--bg-midnight);
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    object-position: center;
+}
+
+.character-shadow {
+    position: absolute;
+    bottom: -15px;
+    left: 10%;
+    width: 80%;
+    height: 10px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.countdown-card {
+    width: 100%;
+}
+
+.countdown-ticker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticker-col {
+    text-align: center;
+    flex: 1;
+}
+
+.ticker-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1.1;
+    text-shadow: 0 0 8px rgba(245, 228, 189, 0.2);
+}
+
+.ticker-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-top: 5px;
+    display: block;
+}
+
+.ticker-sep {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--gold-primary);
+    font-weight: 300;
+    padding-bottom: 12px;
+    opacity: 0.6;
+}
+
+/* --- ELEVACIÓN PREMIUM DEL CONTADOR (COGSWORTH MECHANICAL DOME & ROYAL BANNER) --- */
+.royal-date-banner {
+    background: radial-gradient(circle at 50% 50%, rgba(140, 15, 30, 0.22) 0%, rgba(2, 2, 5, 0.5) 100%);
+    border: 1px double rgba(223, 183, 108, 0.35);
+    border-radius: 20px;
+    padding: 25px 20px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 35px;
+    box-shadow: 
+        0 20px 45px rgba(0, 0, 0, 0.75),
+        inset 0 0 25px rgba(223, 183, 108, 0.08);
+    position: relative;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+/* --- ELEVACIÓN PREMIUM DE LA CUENTA REGRESIVA FRAGMENTADA --- */
+.countdown-title-top {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: -45px; /* Trae el título más cerca del Cogsworth / Reloj */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    z-index: 5;
+    position: relative;
+}
+
+.countdown-caption-bottom {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 25px;
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    max-width: 480px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.royal-date-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+.banner-crown {
+    font-size: 2rem;
+    color: var(--gold-primary);
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 8px rgba(223, 183, 108, 0.45));
+    line-height: 1;
+}
+
+.royal-date-tag {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+    opacity: 0.85;
+}
+
+.royal-date-main {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.8rem;
+    color: var(--gold-primary);
+    margin: 5px 0 12px;
+    letter-spacing: 0.04em;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.royal-date-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.detail-divider {
+    color: var(--gold-primary);
+    font-weight: 700;
+}
+
+/* --- ENGRANAJES MECÁNICOS COGSWORTH --- */
+.clock-gear-wrapper {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    color: rgba(223, 183, 108, 0.13); /* Oro metálico sutil y misterioso */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gear-left-anim {
+    top: 10px;
+    left: 25px;
+    animation: spinGearClockwise 16s linear infinite;
+}
+
+.gear-right-anim {
+    bottom: -15px;
+    right: 40px;
+    animation: spinGearCounter 20s linear infinite;
+}
+
+@keyframes spinGearClockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spinGearCounter {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+.clock-gear-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 2px rgba(223,183,108,0.1));
+}
+
+/* --- CÁPSULAS DE NÚMEROS 3D (TICKER BOX) --- */
+.ticker-box {
+    background: radial-gradient(circle at 50% 30%, rgba(223, 183, 108, 0.08) 0%, rgba(5, 7, 18, 0.85) 100%);
+    border: 1px solid rgba(223, 183, 108, 0.22);
+    border-radius: 16px;
+    padding: 14px 4px;
+    box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.65),
+        inset 0 1px 1px rgba(255, 255, 255, 0.04),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.8);
+    margin-bottom: 8px;
+    transition: var(--transition-premium);
+    position: relative;
+    overflow: hidden;
+}
+
+.ticker-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.035), transparent);
+    pointer-events: none;
+}
+
+.ticker-box:hover {
+    border-color: var(--gold-primary);
+    box-shadow: 
+        0 15px 35px rgba(223, 183, 108, 0.18),
+        0 0 12px rgba(223, 183, 108, 0.06);
+    transform: translateY(-3px) scale(1.02);
+}
+
+/* --- RESPONSIVIDAD RESPONSIVA MOBILE-FIRST --- */
+@media (max-width: 480px) {
+    .royal-date-banner {
+        padding: 20px 14px;
+        margin-bottom: 25px;
+        border-radius: 16px;
+    }
+    .royal-date-main {
+        font-size: 1.35rem;
+        margin: 4px 0 10px;
+    }
+    .royal-date-details {
+        flex-direction: column;
+        gap: 5px;
+        font-size: 0.78rem;
+    }
+    .detail-divider {
+        display: none;
+    }
+    .ticker-box {
+        padding: 8px 2px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+    }
+    .ticker-number {
+        font-size: 1.65rem !important;
+    }
+    .clock-gear-wrapper {
+        width: 45px;
+        height: 45px;
+    }
+    .gear-left-anim {
+        top: 25px;
+        left: 10px;
+    }
+    .gear-right-anim {
+        bottom: -5px;
+        right: 15px;
+    }
+}
+
+/* SECCIÓN 4: LAS COORDENADAS DEL BAILE (UBICACIÓN) */
+.section-location {
+    padding: 80px 0; /* Macro-whitespace */
+}
+
+.location-bento {
+    width: 100%;
+}
+
+.location-grid-layout {
+    width: 100%;
+    position: relative;
+}
+
+.info-palace-card {
+    width: 100%;
+}
+
+.card-eyebrow {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--gold-primary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.card-heading {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.location-address {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.separator-gold {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-primary);
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.location-meta {
+    margin-bottom: 25px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.meta-icon {
+    font-size: 1rem;
+}
+
+/* --- ELEVACIÓN PREMIUM: EL VITRAL MÁGICO (GOTHIC STAINED GLASS) --- */
+.stained-glass-wrapper {
+    width: 125px;
+    height: auto;
+    margin: 0 auto 25px;
+    position: relative;
+    filter: drop-shadow(0 12px 25px rgba(185, 28, 28, 0.4));
+}
+
+.stained-glass-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: vitralGlow 4s infinite alternate ease-in-out;
+}
+
+@keyframes vitralGlow {
+    0% {
+        filter: drop-shadow(0 0 8px rgba(185, 28, 28, 0.35)) drop-shadow(0 0 2px rgba(223, 183, 108, 0.15));
+    }
+    100% {
+        filter: drop-shadow(0 0 22px rgba(185, 28, 28, 0.8)) drop-shadow(0 0 6px rgba(223, 183, 108, 0.4));
+    }
+}
+
+/* Efecto de haz de luz místico emanando del vitral */
+.vitral-light-beam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(185, 28, 28, 0.22) 0%, rgba(223, 183, 108, 0.08) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: pulseBeam 6s infinite alternate ease-in-out;
+}
+
+@keyframes pulseBeam {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.55; }
+    100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.9; }
+}
+
+/* --- ELEVACIÓN PREMIUM: EL PASE REAL DE GALA (ROYAL TICKET) --- */
+.palace-ticket-container {
+    background: radial-gradient(135deg, rgba(9, 11, 28, 0.85) 0%, rgba(14, 6, 12, 0.9) 100%);
+    border: 1px double rgba(223, 183, 108, 0.25);
+    border-radius: 16px;
+    padding: 18px;
+    margin: 25px 0;
+    box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.55),
+        inset 0 0 15px rgba(223, 183, 108, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.palace-ticket-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(223, 183, 108, 0.04), transparent);
+    transform: rotate(25deg);
+    animation: shineTicket 8s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shineTicket {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}
+
+.ticket-border-dashed {
+    border: 1px dashed rgba(223, 183, 108, 0.35);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    position: relative;
+}
+
+.ticket-crown {
+    font-size: 1.5rem;
+    color: var(--gold-primary);
+    line-height: 1;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.ticket-tag {
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.ticket-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    margin-bottom: 6px;
+}
+
+.ticket-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    max-width: 260px;
+    margin: 0 auto;
+}
+
+/* Marca de agua vintage real en el ticket */
+.ticket-watermark {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-family: var(--font-heading-decorative);
+    font-size: 2.8rem;
+    color: rgba(223, 183, 108, 0.035);
+    font-weight: 700;
+    pointer-events: none;
+    transform: rotate(-15deg);
+}
+
+/* --- OPTIMIZACIÓN MICROINTERACCIONES DEL BOTÓN --- */
+.location-grid-layout #btn-gps {
+    width: 100%;
+    justify-content: center;
+    box-shadow: 
+        0 10px 25px rgba(223, 183, 108, 0.15),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+    transition: var(--transition-haptic);
+}
+
+.location-grid-layout #btn-gps:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 15px 30px rgba(223, 183, 108, 0.28);
+}
+
+/* SECCIÓN 5: PROTOCOLO REAL (VESTIMENTA, HORARIOS Y REGALOS) */
+.section-protocol {
+    padding: 80px 0; /* Macro-whitespace */
+}
+
+.protocol-bento {
+    width: 100%;
+}
+
+.protocol-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 55px; /* Generous whitespace */
+    width: 100%;
+}
+
+/* Card 1: Horarios y Recepción (Lumiere) */
+.card-horarios {
+    padding-top: 50px;
+    position: relative;
+}
+
+.card-title-bento {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    margin-bottom: 20px;
+}
+
+.timeline-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.timeline-list li {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 12px;
+}
+
+.timeline-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.timeline-list .time {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    min-width: 75px;
+}
+
+.timeline-list .event {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Card 2: Vestimenta */
+.card-vestimenta {
+    padding: 2.5rem 1.8rem;
+}
+
+/* Card 3: Regalos (Sra. Potts) */
+.card-regalos {
+    padding-top: 50px;
+    position: relative;
+}
+
+/* --- ELEVACIÓN PREMIUM: AVATARES DE PERSONAJES CON MARCO REAL VECTORIAL (ROYAL FRAME) --- */
+.character-avatar-wrapper {
+    position: absolute;
+    top: -45px;
+    width: 90px;
+    height: 90px;
+    z-index: 5;
+}
+
+.avatar-left {
+    left: 20px;
+}
+
+.avatar-right {
+    right: 20px;
+}
+
+.royal-frame-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    animation: frameShimmer 5s infinite alternate ease-in-out;
+}
+
+@keyframes frameShimmer {
+    0% {
+        filter: drop-shadow(0 0 3px rgba(223, 183, 108, 0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    }
+    100% {
+        filter: drop-shadow(0 0 12px rgba(223, 183, 108, 0.75)) drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+    }
+}
+
+.character-avatar-wrapper .character-character-img {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 1;
+    border: 1px solid var(--gold-dark);
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+}
+
+/* --- ELEVACIÓN PREMIUM: VITRAL DE VESTIMENTA (DRESS GOTHIC VITRAL) --- */
+.dress-vitral-wrapper {
+    width: 120px;
+    height: auto;
+    margin: 0 auto 25px;
+    position: relative;
+    filter: drop-shadow(0 12px 25px rgba(223, 183, 108, 0.25));
+}
+
+.dress-vitral-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: dressVitralGlow 4s infinite alternate ease-in-out;
+}
+
+@keyframes dressVitralGlow {
+    0% {
+        filter: drop-shadow(0 0 6px rgba(223, 183, 108, 0.25)) drop-shadow(0 0 2px rgba(185, 28, 28, 0.15));
+    }
+    100% {
+        filter: drop-shadow(0 0 18px rgba(223, 183, 108, 0.6)) drop-shadow(0 0 5px rgba(185, 28, 28, 0.3));
+    }
+}
+
+.vitral-light-beam-gold {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(223, 183, 108, 0.18) 0%, rgba(185, 28, 28, 0.04) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: pulseBeam 6s infinite alternate ease-in-out;
+}
+
+/* --- ELEVACIÓN PREMIUM: EL PASE DE VESTIMENTA (VESTIMENTA TICKET) --- */
+.vestimenta-ticket-container {
+    background: radial-gradient(135deg, rgba(14, 6, 12, 0.85) 0%, rgba(9, 11, 28, 0.9) 100%);
+    border: 1px double rgba(223, 183, 108, 0.25);
+    border-radius: 16px;
+    padding: 18px;
+    margin: 20px 0 0;
+    box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.55),
+        inset 0 0 15px rgba(223, 183, 108, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.vestimenta-ticket-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(223, 183, 108, 0.03), transparent);
+    transform: rotate(25deg);
+    animation: shineTicket 9s infinite linear;
+    pointer-events: none;
+}
+
+/* Selector Deslizable de Regalos (Tabs) */
+.gift-tabs-container {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.gift-tabs-header {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+.gift-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-haptic);
+}
+
+.gift-tab-btn.active {
+    background: rgba(223, 183, 108, 0.15);
+    color: var(--gold-primary);
+    border: 1px solid rgba(223, 183, 108, 0.25);
+}
+
+.gift-tabs-content {
+    min-height: 120px;
+}
+
+.gift-pane {
+    display: none;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.gift-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gift-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Datos de Transferencia Pago Móvil & Zelle */
+.digital-transfer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.transfer-method {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.method-title {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--gold-primary);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+}
+
+.method-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.method-row:last-child {
+    margin-bottom: 0;
+}
+
+.transfer-method .value {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.copy-btn {
+    background: rgba(223, 183, 108, 0.1);
+    border: 1px solid rgba(223, 183, 108, 0.2);
+    color: var(--gold-primary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-haptic);
+}
+
+.copy-btn:hover {
+    background: var(--gold-primary);
+    color: var(--bg-deep-oled);
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+.method-holder {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+/* SECCIÓN 6: CONFIRMACIÓN DE ASISTENCIA (RSVP) */
+.section-rsvp {
+    padding: 60px 0;
+}
+
+.rsvp-bento {
+    width: 100%;
+}
+
+.rsvp-form-card {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-primary);
+    margin-bottom: 8px;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text-light);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    transition: var(--transition-haptic);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 10px rgba(223, 183, 108, 0.15);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--text-light);
+    cursor: pointer;
+    position: relative;
+}
+
+.radio-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-radio {
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    transition: var(--transition-haptic);
+}
+
+.radio-label input[type="radio"]:checked ~ .custom-radio {
+    border-color: var(--gold-primary);
+    background-color: rgba(223, 183, 108, 0.1);
+}
+
+.custom-radio::after {
+    content: '';
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background-color: var(--gold-primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-label input[type="radio"]:checked ~ .custom-radio::after {
+    display: block;
+}
+
+/* Colapsable dinámico de acompañantes */
+#attendance-details-container,
+#companion-name-container {
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.4s ease-out, padding 0.4s ease-out;
+    max-height: 500px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+#attendance-details-container.hidden-anim,
+#companion-name-container.hidden-anim {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    pointer-events: none;
+}
+
+.optional-badge {
+    font-size: 0.72rem;
+    font-weight: normal;
+    opacity: 0.7;
+    color: var(--gold-secondary);
+    margin-left: 6px;
+    letter-spacing: 0.05em;
+    font-family: var(--font-body);
+}
+
+.form-helper {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+/* Mensaje de éxito */
+.success-icon {
+    font-size: 3rem;
+    color: var(--gold-primary);
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(223, 183, 108, 0.3));
+}
+
+.success-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    margin-bottom: 10px;
+}
+
+.success-body {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* SECCIÓN 7: PIE DE PÁGINA (TE ESPERAMOS) */
+.section-footer {
+    padding: 80px 0 40px;
+}
+
+.footer-rose-frame {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+}
+
+.footer-rose {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 8px rgba(185, 28, 28, 0.4));
+}
+
+.cursive-footer-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--gold-primary);
+    line-height: 1.1;
+}
+
+.footer-girl-name {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.8rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+}
+
+.footer-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 35px;
+}
+
+/* Event Planner Badge (Planner Ejemplo) styling */
+.planner-credit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.planner-badge {
+    display: inline-block;
+    text-decoration: none;
+    background: linear-gradient(135deg, rgba(140, 15, 30, 0.12) 0%, rgba(9, 11, 28, 0.65) 100%);
+    border: 1px solid rgba(223, 183, 108, 0.25);
+    border-radius: 12px;
+    padding: 16px 28px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4), 
+        inset 0 0 15px rgba(223, 183, 108, 0.05);
+    max-width: 380px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+}
+
+.planner-badge:hover {
+    border-color: rgba(223, 183, 108, 0.7);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 15px 35px rgba(223, 183, 108, 0.15), 
+        inset 0 0 20px rgba(223, 183, 108, 0.1);
+}
+
+.badge-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-role {
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+}
+
+.badge-name {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--gold-light) 0%, var(--gold-primary) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 2px 0;
+    letter-spacing: 0.06em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.badge-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold-primary);
+    transition: color 0.3s ease;
+}
+
+.instagram-icon {
+    width: 13px;
+    height: 13px;
+    transition: transform 0.4s ease;
+}
+
+.planner-badge:hover .instagram-icon {
+    transform: rotate(15deg) scale(1.15);
+}
+
+.planner-badge:hover .badge-ig {
+    color: var(--gold-light);
+}
+
+/* Palace Access Portal Capsule (Valentina's parents easy control) */
+.admin-portal-wrapper {
+    background: rgba(2, 2, 5, 0.45);
+    border: 1px double rgba(223, 183, 108, 0.15);
+    border-radius: 20px;
+    padding: 22px 20px 18px;
+    max-width: 420px;
+    width: 92%;
+    margin: 0 auto 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 
+        0 15px 40px rgba(0,0,0,0.5), 
+        inset 0 0 25px rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+}
+
+.admin-portal-tag {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--gold-primary);
+    margin-bottom: 12px;
+    text-shadow: 0 0 8px rgba(223, 183, 108, 0.35);
+}
+
+.admin-capsule-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(223, 183, 108, 0.06);
+    border: 1.5px solid var(--gold-primary);
+    border-radius: 50px;
+    padding: 11px 28px;
+    color: var(--gold-light) !important;
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+        0 0 15px rgba(223, 183, 108, 0.15), 
+        inset 0 0 10px rgba(223, 183, 108, 0.05);
+    cursor: pointer;
+}
+
+.admin-capsule-btn:hover {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+    color: var(--bg-deep-oled) !important;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 0 25px rgba(223, 183, 108, 0.45), 
+        0 5px 15px rgba(0,0,0,0.3);
+}
+
+.admin-capsule-btn:active {
+    transform: translateY(0);
+}
+
+.castle-icon {
+    font-size: 0.95rem;
+    filter: drop-shadow(0 0 2px rgba(223, 183, 108, 0.5));
+    transition: transform 0.4s ease;
+}
+
+.admin-capsule-btn:hover .castle-icon {
+    filter: none;
+    transform: scale(1.1);
+}
+
+.admin-portal-desc {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    letter-spacing: 0.02em;
+    font-style: italic;
+}
+
+.credits {
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    padding-top: 30px;
+}
+
+.credits-text {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+}
+
+/* ==========================================================================
+   ESTILOS DINÁMICOS Y ANIMACIONES JS
+   ========================================================================== */
+.hidden {
+    display: none !important;
+}
+
+/* Clases para animaciones de Intersection Observer */
+.fade-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* BOTÓN DE ENTRADA DEL PRELOADER (Royal Welcome Action) */
+#preloader-action {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    margin-top: 25px;
+}
+
+.preloader-enter-btn {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+    color: var(--bg-deep-oled) !important;
+    border: 1px solid var(--gold-light);
+    border-radius: 50px;
+    padding: 14px 34px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    box-shadow: 
+        0 0 20px rgba(223, 183, 108, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: var(--transition-haptic);
+    animation: royalPulse 2s infinite alternate ease-in-out;
+}
+
+.preloader-enter-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 0 30px rgba(223, 183, 108, 0.7);
+    background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+}
+
+.preloader-enter-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+@keyframes royalPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(223, 183, 108, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(223, 183, 108, 0.8), 0 0 10px rgba(185, 28, 28, 0.4);
+    }
+}
+
+/* ==========================================================================
+   ELEVACIÓN PREMIUM DE LA SECCIÓN DE OBSEQUIOS (ROYAL GLOW & INTERACTIVE CARDS)
+   ========================================================================== */
+
+/* 1. Vitral de Regalos y Haz de Luz Imperial */
+.gift-vitral-wrapper {
+    width: 120px;
+    height: auto;
+    margin: 0 auto 25px;
+    position: relative;
+    filter: drop-shadow(0 12px 25px rgba(223, 183, 108, 0.25));
+}
+
+.gift-vitral-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: giftVitralGlow 4s infinite alternate ease-in-out;
+}
+
+@keyframes giftVitralGlow {
+    0% {
+        filter: drop-shadow(0 0 6px rgba(223, 183, 108, 0.25)) drop-shadow(0 0 2px rgba(185, 28, 28, 0.15));
+    }
+    100% {
+        filter: drop-shadow(0 0 20px rgba(223, 183, 108, 0.65)) drop-shadow(0 0 6px rgba(185, 28, 28, 0.35));
+    }
+}
+
+/* 2. El Sobre Imperial Táctil (Lluvia de Sobres) */
+.sobres-ticket-container {
+    background: radial-gradient(135deg, rgba(30, 8, 14, 0.95) 0%, rgba(9, 11, 28, 0.98) 100%);
+    border: 1px double rgba(223, 183, 108, 0.28);
+    border-radius: 20px;
+    padding: 22px;
+    margin-top: 15px;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 25px rgba(223, 183, 108, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.sobres-ticket-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(223, 183, 108, 0.04), transparent);
+    transform: rotate(25deg);
+    animation: shineTicket 9s infinite linear;
+    pointer-events: none;
+}
+
+/* Esquineras Doradas del Sobre */
+.ticket-corner-ornament {
+    position: absolute;
+    font-size: 0.95rem;
+    color: rgba(223, 183, 108, 0.45);
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+    transition: var(--transition-premium);
+}
+
+.ticket-corner-ornament.top-left { top: 6px; left: 6px; }
+.ticket-corner-ornament.top-right { top: 6px; right: 6px; transform: scaleX(-1); }
+.ticket-corner-ornament.bottom-left { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.ticket-corner-ornament.bottom-right { bottom: 6px; right: 6px; transform: scale(-1); }
+
+.sobres-ticket-container:hover .ticket-corner-ornament {
+    color: var(--gold-primary);
+    filter: drop-shadow(0 0 4px rgba(223, 183, 108, 0.3));
+}
+
+/* Sello de Lacre Real */
+.wax-seal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0 5px;
+    width: 100%;
+}
+
+.wax-seal-wrapper {
+    width: 76px;
+    height: 76px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wax-seal-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.wax-seal-glow {
+    position: absolute;
+    inset: -15px;
+    background: radial-gradient(circle, rgba(185, 28, 28, 0.28) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+    animation: sealGlowPulse 4s infinite alternate ease-in-out;
+}
+
+@keyframes sealGlowPulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    100% { transform: scale(1.1); opacity: 0.95; }
+}
+
+.wax-seal-wrapper:hover {
+    transform: scale(1.08) rotate(4deg);
+}
+
+.wax-seal-wrapper:active {
+    transform: scale(0.95);
+}
+
+/* 3. Tarjetas de Banco Imperiales (Royal Bank Cards) */
+.royal-bank-card {
+    background: radial-gradient(circle at 50% 20%, rgba(223, 183, 108, 0.04) 0%, rgba(5, 7, 18, 0.85) 100%);
+    border: 1px double rgba(223, 183, 108, 0.22);
+    border-radius: 18px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.65),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+}
+
+.royal-bank-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(223,183,108,0.2), transparent 40%, transparent 60%, rgba(223,183,108,0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Tarjeta Hover Elevado */
+.royal-bank-card:hover {
+    transform: translateY(-5px) scale(1.015);
+    border-color: rgba(223, 183, 108, 0.45);
+    box-shadow: 
+        0 22px 45px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(223, 183, 108, 0.12);
+}
+
+/* Barrido de brillo oblicuo */
+.card-shine-effect {
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.03) 30%,
+        rgba(223, 183, 108, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 70%,
+        transparent
+    );
+    transform: skewX(-25deg);
+    pointer-events: none;
+    transition: none;
+}
+
+.royal-bank-card:hover .card-shine-effect {
+    left: 150%;
+    transition: left 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Cabecera de la Tarjeta */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 10px;
+}
+
+.card-brand-title {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+}
+
+.card-method-badge {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--gold-primary);
+    background: rgba(223, 183, 108, 0.08);
+    border: 1px solid rgba(223, 183, 108, 0.2);
+    padding: 3px 10px;
+    border-radius: 30px;
+    text-shadow: 0 0 4px rgba(223, 183, 108, 0.15);
+}
+
+/* Cuerpo de la Tarjeta y Chip */
+.card-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-chip-svg {
+    width: 44px;
+    height: 35px;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.card-data-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field-label {
+    font-family: var(--font-body);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+}
+
+.field-value-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.royal-bank-card .value {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.02em;
+}
+
+/* Botón de Copiado Premium en Capsula */
+.copy-btn-capsule {
+    background: linear-gradient(135deg, rgba(223, 183, 108, 0.08), rgba(223, 183, 108, 0.16)) !important;
+    border: 1.2px solid rgba(223, 183, 108, 0.25) !important;
+    color: var(--gold-primary) !important;
+    padding: 4px 12px !important;
+    border-radius: 30px !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.64rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.copy-btn-capsule:hover {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary)) !important;
+    color: var(--bg-deep-oled) !important;
+    border-color: var(--gold-light) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(223, 183, 108, 0.25) !important;
+}
+
+.copy-btn-capsule:active {
+    transform: translateY(1px) scale(0.96) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Pie de la Tarjeta */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.card-holder-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.card-holder-name {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+}
+
+.card-watermark-crest {
+    font-size: 1.4rem;
+    color: rgba(223, 183, 108, 0.06);
+    line-height: 1;
+    pointer-events: none;
+    transform: rotate(15deg);
+    text-shadow: 0 0 1px rgba(223, 183, 108, 0.05);
+}
+
+/* 4. Tabulado Ajustado */
+.gift-tab-btn {
+    border: 1px solid rgba(223, 183, 108, 0.05) !important;
+}
+
+.gift-tab-btn:hover {
+    color: var(--gold-light);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.gift-tab-btn.active {
+    background: rgba(223, 183, 108, 0.12) !important;
+    color: var(--gold-primary) !important;
+    border-color: rgba(223, 183, 108, 0.3) !important;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 0 8px rgba(223, 183, 108, 0.05) !important;
+}
+
+/* Responsividad Movil */
+@media (max-width: 480px) {
+    .sobres-ticket-container {
+        padding: 16px;
+    }
+    .royal-bank-card {
+        padding: 16px;
+        gap: 12px;
+    }
+    .royal-bank-card .value {
+        font-size: 0.78rem;
+    }
+    .card-holder-name {
+        font-size: 0.85rem;
+    }
+    .copy-btn-capsule {
+        padding: 3px 8px !important;
+        font-size: 0.58rem !important;
+    }
+    .ticket-corner-ornament {
+        font-size: 0.8rem;
+    }
+}
+
+/* ==========================================================================
+   ELEVACIÓN PREMIUM DE LA SECCIÓN RSVP (CONFIRMACIÓN IMPERIAL & GOLDEN TICKET)
+   ========================================================================== */
+
+/* 1. Vitral del Castillo Encantado */
+.rsvp-vitral-wrapper {
+    width: 120px;
+    height: auto;
+    margin: 0 auto 25px;
+    position: relative;
+    filter: drop-shadow(0 12px 25px rgba(124, 58, 237, 0.25));
+}
+
+.rsvp-vitral-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: rsvpVitralGlow 4s infinite alternate ease-in-out;
+}
+
+@keyframes rsvpVitralGlow {
+    0% {
+        filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.25)) drop-shadow(0 0 2px rgba(223, 183, 108, 0.15));
+    }
+    100% {
+        filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.65)) drop-shadow(0 0 6px rgba(223, 183, 108, 0.35));
+    }
+}
+
+.vitral-light-beam-violet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, rgba(185, 28, 28, 0.03) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: pulseBeam 6s infinite alternate ease-in-out;
+}
+
+/* 2. Pergamino de Formulario RSVP y Controles Premium */
+.rsvp-form-card {
+    background: radial-gradient(circle at 50% 20%, rgba(30, 8, 25, 0.45) 0%, rgba(2, 2, 5, 0.95) 100%) !important;
+    border: 1px double rgba(223, 183, 108, 0.25) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.85),
+        inset 0 0 30px rgba(223, 183, 108, 0.04) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.rsvp-form-card .form-input,
+.rsvp-form-card .form-select,
+.rsvp-form-card .form-textarea {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1.2px solid rgba(223, 183, 108, 0.18);
+    border-radius: 10px;
+    padding: 13px;
+    color: var(--text-light);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rsvp-form-card .form-input:focus,
+.rsvp-form-card .form-select:focus,
+.rsvp-form-card .form-textarea:focus {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 12px rgba(223, 183, 108, 0.25);
+    background: rgba(0, 0, 0, 0.75);
+}
+
+/* 3. Radio Buttons de Lacre Real (Wax Seal Radio Controls) */
+.radio-group {
+    gap: 14px !important;
+    margin-top: 8px !important;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.radio-label:hover {
+    color: var(--gold-light);
+}
+
+.custom-radio {
+    width: 22px !important;
+    height: 22px !important;
+    border: 1.2px solid rgba(223, 183, 108, 0.38) !important;
+    background: radial-gradient(circle, rgba(14, 6, 12, 0.9) 0%, rgba(5, 7, 18, 0.95) 100%) !important;
+    border-radius: 50% !important;
+    position: relative;
+    display: inline-block;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.4) !important;
+}
+
+.radio-label input[type="radio"]:checked ~ .custom-radio {
+    border-color: var(--gold-primary) !important;
+    background: radial-gradient(circle at 40% 40%, #c22929 0%, #7f1d1d 75%, #450a0a 100%) !important;
+    transform: scale(1.1) !important;
+    box-shadow: 
+        0 0 12px rgba(185, 28, 28, 0.6),
+        inset 0 1px 2px rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Marca de Lacre Imprimada (Corona/Check) */
+.custom-radio::after {
+    content: '' !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    background-color: var(--gold-primary) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+    transition: all 0.4s ease !important;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5) !important;
+}
+
+.radio-label input[type="radio"]:checked ~ .custom-radio::after {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+}
+
+/* 4. Botón de Envío de Oro Imperial */
+#btn-submit-rsvp {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 10px 22px !important; /* Symmetrical padding for perfect centering */
+    box-sizing: border-box !important;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary), var(--gold-light)) !important;
+    color: var(--bg-deep-oled) !important;
+    font-weight: 700 !important;
+    border: 1px solid var(--gold-light) !important;
+    text-shadow: none !important;
+    box-shadow: 
+        0 8px 25px rgba(223, 183, 108, 0.22),
+        inset 0 1px 0 rgba(255,255,255,0.4) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+#btn-submit-rsvp::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+}
+
+#btn-submit-rsvp:hover::before {
+    left: 100%;
+    transition: left 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#btn-submit-rsvp:hover {
+    transform: translateY(-2px) scale(1.015) !important;
+    box-shadow: 
+        0 12px 30px rgba(223, 183, 108, 0.35),
+        inset 0 1px 0 rgba(255,255,255,0.45) !important;
+    background: linear-gradient(135deg, var(--gold-primary), var(--gold-light), var(--gold-primary)) !important;
+}
+
+/* 5. Pase Dorado Imperial de Éxito (Success Ticket) */
+.rsvp-success-ticket {
+    background: radial-gradient(circle at 50% 30%, #fff7e6 0%, #e6be75 100%) !important;
+    border: 1.5px solid #dfb76c !important;
+    border-radius: 18px;
+    padding: 12px;
+    width: 100%;
+    max-width: 380px;
+    margin: 20px auto;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(223, 183, 108, 0.15),
+        inset 0 0 15px rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    color: #0b070e !important;
+    animation: successTicketReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform-origin: center center;
+}
+
+@keyframes successTicketReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.85) rotate(-3deg) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg) translateY(0);
+    }
+}
+
+.success-ticket-border-dashed {
+    border: 1px dashed rgba(11, 7, 14, 0.45);
+    border-radius: 12px;
+    padding: 20px 16px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.success-ticket-border-dashed .ticket-corner-ornament {
+    color: rgba(11, 7, 14, 0.35) !important;
+    text-shadow: none !important;
+    font-size: 0.82rem;
+}
+
+.success-ticket-header {
+    margin-bottom: 20px;
+}
+
+.ticket-royal-badge {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    color: #79552d;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.ticket-palace-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0b070e;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.success-ticket-body {
+    margin: 25px 0;
+    padding: 12px 0;
+    border-top: 1px dashed rgba(11, 7, 14, 0.15);
+    border-bottom: 1px dashed rgba(11, 7, 14, 0.15);
+    position: relative;
+}
+
+.ticket-guest-label {
+    font-family: var(--font-body);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #7c644d;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.success-guest-name-print {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #8c0f1e;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    display: inline-block;
+    word-break: break-word;
+}
+
+.success-ticket-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.ticket-date-location {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #4a3828;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ticket-date-location .bullet {
+    color: #8c0f1e;
+}
+
+.ticket-gate-code {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.58rem;
+    margin-top: 4px;
+}
+
+.ticket-gate-code .code-label {
+    font-weight: 700;
+    color: #7c644d;
+    letter-spacing: 0.05em;
+}
+
+.ticket-gate-code .code-value {
+    font-weight: 800;
+    color: #0b070e;
+    letter-spacing: 0.08em;
+}
+
+.ticket-watermark-castle {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    font-size: 4.5rem;
+    color: rgba(11, 7, 14, 0.035);
+    pointer-events: none;
+    transform: rotate(-18deg);
+}
+
+/* 6. Pliego de Declinación Imperial (Silver/Bronze Decree for NO ASISTE) */
+.rsvp-decline-decree {
+    background: radial-gradient(circle at 50% 30%, #f9fafb 0%, #b0b5c0 100%) !important;
+    border: 1.5px solid #9ca3af !important;
+    border-radius: 18px;
+    padding: 12px;
+    width: 100%;
+    max-width: 380px;
+    margin: 20px auto;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(156, 163, 175, 0.15),
+        inset 0 0 15px rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    color: #1f2937 !important;
+    animation: successTicketReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform-origin: center center;
+}
+
+.decline-decree-border {
+    border: 1px dashed rgba(31, 41, 55, 0.45);
+    border-radius: 12px;
+    padding: 20px 16px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.decline-decree-border .decline-corner-ornament {
+    color: rgba(31, 41, 55, 0.35) !important;
+    text-shadow: none !important;
+    font-size: 0.82rem;
+    position: absolute;
+}
+
+.decline-corner-ornament.top-left { top: 8px; left: 8px; }
+.decline-corner-ornament.top-right { top: 8px; right: 8px; }
+.decline-corner-ornament.bottom-left { bottom: 8px; left: 8px; }
+.decline-corner-ornament.bottom-right { bottom: 8px; right: 8px; }
+
+.decline-decree-header {
+    margin-bottom: 20px;
+}
+
+.decline-royal-badge {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    color: #4b5563;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.decline-palace-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.decline-decree-body {
+    margin: 25px 0;
+    padding: 12px 0;
+    border-top: 1px dashed rgba(31, 41, 55, 0.15);
+    border-bottom: 1px dashed rgba(31, 41, 55, 0.15);
+    position: relative;
+}
+
+.decline-guest-label {
+    font-family: var(--font-body);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #4b5563;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.decline-guest-name-print {
+    font-family: var(--font-heading-decorative);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    display: inline-block;
+    word-break: break-word;
+}
+
+.decline-decree-footer {
+    margin-top: 15px;
+    padding: 0 5px;
+}
+
+.decline-nostalgic-message {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: #374151;
+    text-shadow: none !important;
+}
+
+.decline-watermark-rose {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    font-size: 4.5rem;
+    color: rgba(31, 41, 55, 0.04);
+    pointer-events: none;
+    transform: rotate(-18deg);
+}
+
+@media (max-width: 480px) {
+    .rsvp-success-ticket {
+        border-radius: 14px;
+        padding: 8px;
+    }
+    .success-ticket-border-dashed {
+        padding: 16px 10px;
+    }
+    .success-guest-name-print {
+        font-size: 1.55rem;
+    }
+    .ticket-palace-title {
+        font-size: 1.05rem;
+    }
+    
+    .rsvp-decline-decree {
+        border-radius: 14px;
+        padding: 8px;
+    }
+    .decline-decree-border {
+        padding: 16px 10px;
+    }
+    .decline-guest-name-print {
+        font-size: 1.55rem;
+    }
+    .decline-palace-title {
+        font-size: 1.05rem;
+    }
+}
+
+/* ==========================================================================
+   ELEVACIÓN PREMIUM DE LA SECCIÓN DE CIERRE (FOOTER & PLANNER BADGE)
+   ========================================================================== */
+
+/* 1. Rosa Encantada Detallada y Pétalos Flotantes */
+.footer-rose-frame {
+    width: 80px;
+    height: 96px;
+    margin: 0 auto 20px;
+    position: relative;
+    filter: drop-shadow(0 8px 16px rgba(185, 28, 28, 0.35));
+}
+
+.footer-rose {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Pétalos Cayendo Animados en Espacio Vectorial */
+.footer-falling-petal-left {
+    transform-origin: center center;
+    animation: petalFloatLeft 7s infinite ease-in-out;
+}
+
+.footer-falling-petal-right {
+    transform-origin: center center;
+    animation: petalFloatRight 6s infinite ease-in-out;
+}
+
+@keyframes petalFloatLeft {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.85; }
+    50% { transform: translateY(8px) rotate(-15deg) scale(0.92); opacity: 0.55; }
+}
+
+@keyframes petalFloatRight {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.85; }
+    50% { transform: translateY(6px) rotate(12deg) scale(0.95); opacity: 0.6; }
+}
+
+.footer-rose-glow {
+    position: absolute;
+    inset: -15px;
+    background: radial-gradient(circle, rgba(185, 28, 28, 0.22) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+    animation: roseGlowRespire 4s infinite alternate ease-in-out;
+}
+
+@keyframes roseGlowRespire {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    100% { transform: scale(1.1); opacity: 0.85; }
+}
+
+/* 2. Bóveda Secreta de Control (Admin Portal) */
+.admin-portal-wrapper {
+    background: radial-gradient(circle at 50% 20%, rgba(223, 183, 108, 0.05) 0%, rgba(2, 2, 5, 0.92) 100%) !important;
+    border: 1px double rgba(223, 183, 108, 0.25) !important;
+    border-radius: 22px !important;
+    padding: 24px 20px 20px !important;
+    box-shadow: 
+        0 20px 45px rgba(0, 0, 0, 0.75), 
+        inset 0 0 25px rgba(223, 183, 108, 0.04) !important;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-portal-wrapper:hover {
+    transform: translateY(-4px) scale(1.015);
+    border-color: rgba(223, 183, 108, 0.45) !important;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.85), 
+        0 0 15px rgba(223, 183, 108, 0.1) !important;
+}
+
+.admin-portal-wrapper .ticket-corner-ornament {
+    color: rgba(223, 183, 108, 0.3) !important;
+    font-size: 0.8rem;
+    text-shadow: none !important;
+}
+
+.admin-portal-wrapper:hover .ticket-corner-ornament {
+    color: var(--gold-primary) !important;
+}
+
+.admin-capsule-btn {
+    background: rgba(223, 183, 108, 0.05) !important;
+    border: 1.2px solid var(--gold-primary) !important;
+    color: var(--gold-light) !important;
+    padding: 11px 26px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    border-radius: 50px !important;
+    box-shadow: 
+        0 6px 15px rgba(223, 183, 108, 0.15), 
+        inset 0 0 10px rgba(223, 183, 108, 0.03) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.admin-capsule-btn:hover {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary)) !important;
+    color: var(--bg-deep-oled) !important;
+    box-shadow: 0 8px 25px rgba(223, 183, 108, 0.5) !important;
+    transform: translateY(-1px);
+}
+
+.admin-capsule-btn:hover .castle-icon {
+    transform: rotate(15deg) scale(1.15);
+}
+
+.admin-portal-desc {
+    color: var(--text-muted) !important;
+    font-size: 0.68rem !important;
+    margin-top: 14px !important;
+    letter-spacing: 0.03em !important;
+}
+
+/* 3. Insignia de Certificación Real del Event Planner */
+.planner-badge {
+    background: linear-gradient(135deg, rgba(140, 15, 30, 0.15) 0%, rgba(9, 11, 28, 0.8) 100%) !important;
+    border: 1px double rgba(223, 183, 108, 0.28) !important;
+    border-radius: 18px !important;
+    padding: 22px 28px !important;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.65), 
+        inset 0 0 20px rgba(223, 183, 108, 0.04) !important;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.planner-badge:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+    border-color: rgba(223, 183, 108, 0.55) !important;
+    box-shadow: 
+        0 22px 45px rgba(0, 0, 0, 0.75), 
+        0 0 20px rgba(223, 183, 108, 0.15) !important;
+}
+
+.planner-badge .ticket-corner-ornament {
+    color: rgba(223, 183, 108, 0.35) !important;
+    font-size: 0.8rem;
+    text-shadow: none !important;
+}
+
+.planner-badge:hover .ticket-corner-ornament {
+    color: var(--gold-primary) !important;
+}
+
+.badge-role {
+    font-size: 0.56rem !important;
+    letter-spacing: 0.2em !important;
+    color: var(--text-muted) !important;
+}
+
+.badge-name {
+    font-size: 1.45rem !important;
+    letter-spacing: 0.08em !important;
+    margin: 5px 0 10px !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+}
+
+.planner-ig-capsule {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(223, 183, 108, 0.05);
+    border: 1px solid rgba(223, 183, 108, 0.2);
+    padding: 5px 14px;
+    border-radius: 30px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gold-primary);
+    transition: all 0.35s ease;
+}
+
+.planner-badge:hover .planner-ig-capsule {
+    background: rgba(223, 183, 108, 0.18);
+    border-color: var(--gold-primary);
+    color: var(--gold-light);
+    box-shadow: 0 4px 10px rgba(223, 183, 108, 0.12);
+}
+
+.planner-badge:hover .instagram-icon {
+    transform: rotate(15deg) scale(1.15);
+}
+
+/* 4. Encaje de Oro Final */
+.gilded-lace-footer {
+    width: 100%;
+    max-width: 240px;
+    margin: 40px auto 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    opacity: 0.75;
+    transition: opacity 0.4s ease;
+}
+
+.gilded-lace-footer:hover {
+    opacity: 1;
+}
+
+.lace-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsividad General Footer */
+@media (max-width: 480px) {
+    .planner-badge {
+        padding: 18px 16px !important;
+    }
+    .badge-name {
+        font-size: 1.22rem !important;
+    }
+    .planner-ig-capsule {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+    .gilded-lace-footer {
+        max-width: 180px;
+        margin-top: 30px;
+    }
+    .admin-portal-wrapper {
+        padding: 20px 14px 16px !important;
+    }
+    .admin-capsule-btn {
+        padding: 9px 20px !important;
+        font-size: 0.74rem !important;
+    }
+}
+
+/* ==========================================================================
+   ELEVACIÓN PREMIUM DE LA PORTADA PRINCIPAL (HERO & MONOGRAM CREST)
+   ========================================================================== */
+
+/* 1. Monograma Escudo Real SVG */
+.monogram-crest-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    animation: crestGlowAnimation 4s infinite alternate ease-in-out;
+}
+
+@keyframes crestGlowAnimation {
+    0% {
+        filter: drop-shadow(0 0 4px rgba(223, 183, 108, 0.2)) drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    }
+    100% {
+        filter: drop-shadow(0 0 14px rgba(223, 183, 108, 0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+    }
+}
+
+.monogram-letters {
+    z-index: 2;
+    position: relative;
+    top: 3px; /* Compensar la corona en la parte superior */
+    font-size: 1.7rem !important;
+}
+
+/* 2. Divisor de Flores de Oro Hero */
+.hero-divider-container {
+    width: 100%;
+    max-width: 160px;
+    margin: -10px auto 18px;
+    filter: drop-shadow(0 0 3px rgba(223, 183, 108, 0.3));
+    opacity: 0.85;
+}
+
+.hero-divider-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 3. Pétalos Cinematicos en Primer Plano (Depth of Field) */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-floating-petal {
+    position: absolute;
+    z-index: 8;
+    pointer-events: none;
+}
+
+.hero-petal-left {
+    left: -15px;
+    top: 25%;
+    width: 60px;
+    height: 60px;
+    filter: blur(2.2px);
+    transform: rotate(-22deg);
+    animation: floatPetalLeft 8s infinite alternate ease-in-out;
+}
+
+.hero-petal-right {
+    right: -20px;
+    top: 48%;
+    width: 75px;
+    height: 75px;
+    filter: blur(3px);
+    transform: rotate(38deg);
+    animation: floatPetalRight 10s infinite alternate ease-in-out;
+}
+
+@keyframes floatPetalLeft {
+    0%, 100% { transform: translateY(0) rotate(-22deg) scale(1); }
+    50% { transform: translateY(12px) rotate(-35deg) scale(0.92); }
+}
+
+@keyframes floatPetalRight {
+    0%, 100% { transform: translateY(0) rotate(38deg) scale(1); }
+    50% { transform: translateY(-15px) rotate(24deg) scale(1.05); }
+}
+
+/* 4. Interacción y Brillo de Retrato */
+.portrait-container:hover .portrait-img {
+    transform: scale(1.06);
+}
+
+.portrait-container:hover .portrait-shell {
+    border-color: var(--gold-primary);
+    box-shadow: 
+        0 40px 80px rgba(0,0,0,0.95),
+        0 0 25px rgba(223, 183, 108, 0.25),
+        inset 0 0 15px rgba(255,255,255,0.85);
+}
+
+/* Sweep de brillo en hover sobre retrato */
+.portrait-core .card-shine-effect {
+    mix-blend-mode: overlay;
+    z-index: 3;
+}
+
+.portrait-container:hover .card-shine-effect {
+    left: 150%;
+    transition: left 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 5. Indicador Circular de Scroll */
+.scroll-arrow-container {
+    width: 40px;
+    height: 40px;
+    margin: 10px auto 0;
+    animation: scrollBounce 2.2s infinite ease-in-out;
+}
+
+.scroll-arrow-svg {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+}
+
+.scroll-indicator:hover .scroll-arrow-svg circle {
+    stroke: var(--gold-primary);
+}
+
+

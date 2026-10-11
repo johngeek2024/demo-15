@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'self' blob:">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Acceso Imperial · Panel de Administración</title>
+    
+    <!-- Fuentes Premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css?v=64">
+    <link rel="icon" type="image/png" href="favicon.png?v=64">
+    
+    <!-- Estilos específicos del Administrador (Para mantener modularidad y evitar sobrecargar index) -->
+    <style>
+        .admin-body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 25px 15px;
+            color: var(--text-light);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 480px) {
+            .admin-body {
+                padding: 15px 10px;
+            }
+        }
+        
+        .admin-panel-container {
+            width: 100%;
+            max-width: 950px;
+            z-index: 10;
+        }
+
+        /* BARRA DE NAVEGACIÓN SUPERIOR IMPERIAL */
+        .admin-top-nav {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 0 5px;
+        }
+
+        .back-to-palace-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gold-primary);
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: var(--transition-haptic);
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(14, 18, 36, 0.45);
+            border: 1px solid rgba(223, 183, 108, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .back-to-palace-link:hover {
+            color: var(--gold-light);
+            border-color: var(--gold-primary);
+            background: rgba(223, 183, 108, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .back-to-palace-link:active {
+            transform: scale(0.96);
+        }
+
+        .back-to-palace-link .back-arrow {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-to-palace-link:hover .back-arrow {
+            transform: translateX(-3px);
+        }
+        
+        /* EVITAR ZOOM AUTOMÁTICO EN SAFARI */
+        .form-input, .form-select, .form-textarea {
+            font-size: 16px !important;
+            padding: 10px 14px !important;
+            border-radius: 10px !important;
+            background: rgba(5, 7, 18, 0.75) !important;
+            border: 1px solid rgba(223, 183, 108, 0.25) !important;
+            color: var(--text-light) !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+            font-family: var(--font-body);
+            transition: var(--transition-haptic) !important;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold-light) !important;
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.5),
+                0 0 10px rgba(223, 183, 108, 0.25) !important;
+            outline: none !important;
+        }
+        
+        /* LOGIN PANEL VAULT */
+        .login-card {
+            max-width: 400px;
+            margin: 20px auto 0;
+            z-index: 15;
+            position: relative;
+        }
+
+        .login-logo {
+            font-family: var(--font-heading-decorative);
+            font-size: 2.2rem;
+            text-align: center;
+            color: var(--gold-primary);
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 15px rgba(223,183,108,0.35);
+            animation: floatSlow 6s infinite ease-in-out;
+        }
+        
+        /* DASHBOARD SECTION */
+        .dashboard-container {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            width: 100%;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .dashboard-title {
+            font-size: 1.55rem;
+            font-weight: 500;
+            color: var(--gold-primary);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.28);
+            color: #f87171;
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition-haptic);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .logout-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+        }
+
+        .logout-btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-header {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+            }
+            .dashboard-title {
+                font-size: 1.15rem;
+            }
+            .logout-btn {
+                align-self: center;
+                padding: 6px 12px;
+                font-size: 0.68rem;
+            }
+        }
+        
+        /* BENTO DASHBOARD EN VITRALES DE ORO (COMPACT 2x2 GRID ALWAYS ON MOBILE) */
+        .stats-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+            margin-bottom: 20px !important;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 15px !important;
+                margin-bottom: 25px !important;
+            }
+        }
+        
+        .stat-card {
+            padding: 3px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02) !important;
+        }
+
+        .stat-card.active {
+            border-color: rgba(223, 183, 108, 0.85) !important;
+            box-shadow: 
+                0 0 25px var(--card-glow),
+                inset 0 0 15px var(--card-glow) !important;
+            transform: translateY(-3px) scale(1.02) !important;
+        }
+        
+        .stat-card .card-inner {
+            padding: 1.1rem 0.8rem !important;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: calc(1.5rem - 3px) !important;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Auras de Colores de Fondo para los Vitrales */
+        .card-total {
+            --card-glow: rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.28) !important;
+        }
+        .card-adults {
+            --card-glow: rgba(245, 158, 11, 0.25);
+            border-color: rgba(245, 158, 11, 0.28) !important;
+        }
+        .card-companions {
+            --card-glow: rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.28) !important;
+        }
+        .card-allergies {
+            --card-glow: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.28) !important;
+        }
+
+        .stat-card .card-inner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--card-glow) 0%, transparent 70%);
+            border-radius: inherit;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        /* Iconos Vectoriales del Dashboard */
+        .stat-icon-wrapper {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-card:hover .stat-icon-wrapper {
+            transform: scale(1.15) rotate(4deg);
+        }
+
+        .stat-icon-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .stat-val {
+            font-family: var(--font-heading);
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            line-height: 1.1;
+            margin-bottom: 3px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+        
+        .stat-lbl {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px !important;
+                margin-bottom: 15px !important;
+            }
+            .stat-card .card-inner {
+                padding: 0.8rem 0.5rem !important;
+                border-radius: 1.1rem !important;
+            }
+            .stat-icon-wrapper {
+                width: 24px;
+                height: 24px;
+                margin-bottom: 4px;
+            }
+            .stat-val {
+                font-size: 1.35rem;
+            }
+            .stat-lbl {
+                font-size: 0.5rem;
+                letter-spacing: 0.04em;
+            }
+        }
+        
+        /* TABLE CONTROLS & SEARCH */
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .search-box {
+            position: relative;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: var(--gold-primary);
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 5;
+        }
+
+        .search-box .form-input {
+            width: 100%;
+            padding-left: 36px !important;
+            border-radius: 50px !important;
+            background: rgba(14, 18, 36, 0.45) !important;
+            border: 1px solid rgba(223, 183, 108, 0.2) !important;
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+        }
+        
+        .table-card {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .table-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            #btn-export-pdf {
+                width: 100%;
+                justify-content: center;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+            }
+        }
+
+        /* LOS PERGAMINOS DE INVITADOS (GUEST DECREES) */
+        .guests-cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+        }
+
+        .guest-card-item {
+            background: radial-gradient(circle at center, #fefbfa 0%, #f5ecd8 100%) !important;
+            border: 1.2px solid rgba(124, 92, 36, 0.3) !important;
+            border-radius: 1.4rem !important;
+            padding: 1.2rem !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75), inset 0 0 25px rgba(223, 183, 108, 0.08) !important;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .guest-card-item:hover {
+            border-color: var(--gold-primary) !important;
+            transform: translateY(-2px) scale(1.004);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), inset 0 0 25px rgba(223, 183, 108, 0.08) !important;
+        }
+
+        /* Hilo-marco interior de orfebrería */
+        .guest-card-item::before {
+            content: '';
+            position: absolute;
+            top: 7px;
+            left: 7px;
+            right: 7px;
+            bottom: 7px;
+            border: 1px solid rgba(124, 92, 36, 0.12);
+            border-radius: calc(1.4rem - 7px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .guest-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed rgba(124, 92, 36, 0.18);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .guest-card-name {
+            font-family: var(--font-heading) !important;
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+            color: #03040a !important;
+            letter-spacing: 0.01em !important;
+            margin: 0;
+            text-shadow: none !important;
+        }
+
+        .guest-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Pases con iconos imperiales */
+        .guest-passes {
+            font-size: 0.82rem;
+            color: #060814 !important;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Dieta / Alergias colgante real */
+        .guest-diet-warning {
+            background: rgba(185, 28, 28, 0.05) !important;
+            border: 1px solid rgba(185, 28, 28, 0.22) !important;
+            color: #991b1b !important;
+            padding: 6px 12px !important;
+            border-radius: 8px !important;
+            font-size: 0.76rem !important;
+            font-weight: 700 !important;
+            display: inline-flex;
+            align-self: flex-start;
+            gap: 5px;
+        }
+
+        /* Globo del Mensaje del Cuento */
+        .guest-msg-quote {
+            font-family: var(--font-heading) !important;
+            font-size: 1rem !important;
+            font-style: italic !important;
+            color: #2b1f09 !important;
+            line-height: 1.5 !important;
+            background: rgba(124, 92, 36, 0.03) !important;
+            border: 1.2px solid rgba(124, 92, 36, 0.12) !important;
+            border-radius: 10px !important;
+            padding: 8px 12px 8px 16px !important;
+            position: relative;
+            margin-top: 4px !important;
+            text-shadow: none !important;
+        }
+
+        .guest-msg-quote::before {
+            content: '“';
+            font-family: var(--font-heading-decorative);
+            font-size: 2.2rem;
+            color: rgba(124, 92, 36, 0.15);
+            position: absolute;
+            left: 4px;
+            top: -4px;
+            line-height: 1;
+        }
+
+        /* Badges de Lacre en el Panel del Cuento */
+        .badge-si, .badge-no {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 50px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .badge-si {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #065f46;
+        }
+
+        .badge-no {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #991b1b;
+        }
+
+        /* Estilo de los Sellos de Lacre SVG de Asistencia */
+        .wax-seal-badge-wrapper {
+            position: absolute;
+            top: -8px;
+            right: 0px;
+            width: 58px;
+            height: 58px;
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+            transition: transform 0.4s ease;
+        }
+
+        .guest-card-item:hover .wax-seal-badge-wrapper {
+            transform: scale(1.08) rotate(-6deg);
+        }
+
+        .wax-seal-badge-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .table-empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-size: 1.05rem;
+            width: 100%;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 1.2rem;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        @media (max-width: 480px) {
+            .guest-card-item {
+                padding: 0.95rem !important;
+                border-radius: 1.1rem !important;
+            }
+            .guest-card-item::before {
+                top: 5px; left: 5px; right: 5px; bottom: 5px;
+                border-radius: calc(1.1rem - 5px);
+            }
+            .guest-card-name {
+                font-size: 1.08rem !important;
+            }
+            .wax-seal-badge-wrapper {
+                width: 48px;
+                height: 48px;
+                top: -6px;
+            }
+            .guest-msg-quote {
+                font-size: 0.88rem !important;
+                padding: 6px 10px 6px 14px !important;
+            }
+        }
+
+        /* PAGINACIÓN IMPERIAL */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+            padding: 5px 0;
+            z-index: 5;
+        }
+
+        .pagination-btn {
+            background: rgba(14, 18, 36, 0.45) !important;
+            border: 1px solid rgba(223, 183, 108, 0.25) !important;
+            color: var(--gold-primary) !important;
+            font-family: var(--font-body) !important;
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            padding: 8px 16px !important;
+            border-radius: 50px !important;
+            cursor: pointer;
+            transition: var(--transition-haptic) !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            color: var(--gold-light) !important;
+            border-color: var(--gold-primary) !important;
+            background: rgba(223, 183, 108, 0.12) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 15px rgba(223, 183, 108, 0.15) !important;
+        }
+
+        .pagination-btn:active:not(:disabled) {
+            transform: scale(0.96) !important;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            color: var(--text-muted) !important;
+            box-shadow: none !important;
+        }
+
+        .pagination-info {
+            font-family: var(--font-heading) !important;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .pagination-container {
+                gap: 10px;
+                margin-top: 15px;
+            }
+            .pagination-btn {
+                padding: 6px 12px !important;
+                font-size: 0.65rem !important;
+            }
+            .pagination-info {
+                font-size: 0.72rem;
+                min-width: 90px;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <aside class="demo-ribbon" role="note"><b>DEMO</b> <span>Datos ficticios · nada se envía a ningún servidor</span> <a href="admin.html">Panel (cualquier clave)</a></aside>
+    <style>.demo-ribbon{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;justify-content:center;max-width:min(94vw,560px);padding:8px 14px;border-radius:14px;background:rgba(10,12,24,.9);color:#e2e8f0;font:500 12px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;border:1px solid rgba(251,191,36,.55);box-shadow:0 6px 24px rgba(0,0,0,.4)}.demo-ribbon b{color:#fbbf24;letter-spacing:.12em}.demo-ribbon a{color:#7dd3fc;text-decoration:underline}</style>
+    
+    <!-- DEFINICIÓN DE GRADIENTES DE ORO GLOBALES -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="dc-gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fff5db" />
+                <stop offset="35%" stop-color="#dfb76c" />
+                <stop offset="70%" stop-color="#b99347" />
+                <stop offset="100%" stop-color="#7c5c24" />
+            </linearGradient>
+        </defs>
+    </svg>
+    
+    <!-- FONDO DE MANSION CON DESENFOQUE CINEMÁTICO -->
+    <div class="mansion-parallax-bg" style="background-image: radial-gradient(ellipse at 50% 30%, #2a1030 0%, #120818 55%, #07040b 100%); filter: blur(25px) brightness(0.28) scale(1.05); position: fixed; inset: 0; width: 100vw; height: 100vh; background-size: cover; background-position: center; z-index: -2;"></div>
+    <div class="vignette-overlay" style="position: fixed; inset: 0; background: radial-gradient(circle, transparent 20%, rgba(5,7,18,0.92) 100%); z-index: -1; pointer-events: none;"></div>
+
+    <!-- BRILLOS DE ORO EN CANVAS -->
+    <canvas id="sparkles-canvas"></canvas>
+
+    <div class="admin-panel-container">
+
+        <!-- BARRA DE NAVEGACIÓN SUPERIOR IMPERIAL -->
+        <div class="admin-top-nav">
+            <a href="index.html" class="back-to-palace-link">
+                <span class="back-arrow">←</span> Volver al Palacio
+            </a>
+        </div>
+
+        <!-- 1. FORMULARIO DE ACCESO (LOGIN GATE) -->
+        <div id="login-gate" class="double-bezel-card login-card">
+            <div class="card-inner">
+                <div class="login-logo" style="margin-bottom: 10px;">✦ SC ✦</div>
+                <h2 class="section-title text-gold" style="margin-bottom: 25px; font-size: 1.3rem;">Acceso Cuento Real</h2>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="admin-email" class="form-label">Correo del Palacio</label>
+                        <input type="email" id="admin-email" class="form-input" placeholder="organizador@ejemplo.invalid" required autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 30px;">
+                        <label for="admin-password" class="form-label">Contraseña Imperial</label>
+                        <input type="password" id="admin-password" class="form-input" placeholder="••••••••••••" required autocomplete="current-password">
+                    </div>
+                    
+                    <button type="submit" class="island-button group w-full justify-center" id="btn-login">
+                        <span class="btn-text">Ingresar al Palacio</span>
+                        <span class="btn-icon-wrapper">
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </span>
+                    </button>
+                </form>
+                <p id="login-error-msg" class="hidden" style="color: #ef4444; font-size: 0.8rem; margin-top: 15px; text-align: center; font-weight: 500;"></p>
+            </div>
+        </div>
+
+        <!-- 2. PANEL DE CONTROL (DASHBOARD - HIDDEN BY DEFAULT) -->
+        <div id="admin-dashboard" class="dashboard-container hidden">
+            
+            <header class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title" style="font-family: var(--font-heading-decorative); letter-spacing: 0.05em;">Cortejo de Valentina</h1>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-heading); font-style: italic; margin-top: 4px;">Confirmaciones en tiempo real desde la nube</p>
+                </div>
+                <button id="btn-logout" class="logout-btn">Salir del Cuento</button>
+            </header>
+            
+            <!-- PANEL BENTO DE ESTADÍSTICAS EN VITRALES DE ORO -->
+            <div class="stats-grid">
+                
+                <div class="double-bezel-card stat-card card-total">
+                    <div class="card-inner">
+                        <div class="stat-icon-wrapper">
+                            <!-- SVG de Corona Imperial -->
+                            <svg class="stat-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z" fill="none" stroke="url(#dc-gold-grad)"/>
+                                <path d="M3 20h18" stroke="url(#dc-gold-grad)" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <div class="stat-val" id="stat-total-guests">0</div>
+                        <div class="stat-lbl">Total Invitados</div>
+                    </div>
+                </div>
+                
+                <div class="double-bezel-card stat-card card-adults">
+                    <div class="card-inner">
+                        <div class="stat-icon-wrapper">
+                            <!-- SVG de Flor de Lis -->
+                            <svg class="stat-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2C12 2 14.5 5 14.5 8C14.5 11 12 13 12 13C12 13 9.5 11 9.5 8C9.5 5 12 2 12 2Z" fill="none" stroke="url(#dc-gold-grad)"/>
+                                <path d="M12 13C14 13 17 12 19 13C17 14 14 14 12 16C10 14 7 14 5 13C7 12 10 13 12 13Z" fill="none" stroke="url(#dc-gold-grad)"/>
+                                <path d="M4 14C4 14 6 15 8 15" stroke="url(#dc-gold-grad)"/>
+                                <path d="M20 14C20 14 18 15 16 15" stroke="url(#dc-gold-grad)"/>
+                            </svg>
+                        </div>
+                        <div class="stat-val" id="stat-adults">0</div>
+                        <div class="stat-lbl">Invitados Titulares</div>
+                    </div>
+                </div>
+                
+                <div class="double-bezel-card stat-card card-companions">
+                    <div class="card-inner">
+                        <div class="stat-icon-wrapper">
+                            <!-- SVG de Estrella Mágica -->
+                            <svg class="stat-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="url(#dc-gold-grad)"/>
+                            </svg>
+                        </div>
+                        <div class="stat-val" id="stat-companions">0</div>
+                        <div class="stat-lbl">Acompañantes</div>
+                    </div>
+                </div>
+                
+                <div class="double-bezel-card stat-card card-allergies">
+                    <div class="card-inner">
+                        <div class="stat-icon-wrapper">
+                            <!-- SVG de Rosa Mágica -->
+                            <svg class="stat-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22C12 22 12 15 12 12C12 9 10 7 12 5C14 7 12 9 12 12" fill="none" stroke="url(#dc-gold-grad)"/>
+                                <path d="M12 12C10 12 7 10 5 12C7 14 10 12 12 12Z" fill="none" stroke="url(#dc-gold-grad)"/>
+                                <path d="M12 9C12 9 16 7 18 9C16 11 12 11 12 9Z" fill="none" stroke="url(#dc-gold-grad)"/>
+                            </svg>
+                        </div>
+                        <div class="stat-val" id="stat-allergies" style="color: #ef4444;">0</div>
+                        <div class="stat-lbl">Alergias / Dietas</div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- CONTROLES Y EXPORTACIÓN -->
+            <div class="table-controls">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="admin-search-input" class="form-input" placeholder="Buscar invitado por nombre..." style="padding-left: 38px !important;">
+                </div>
+                
+                <!-- Botón de Exportación en PDF -->
+                <button class="island-button group" id="btn-export-pdf">
+                    <span class="btn-text">Descargar Lista en PDF</span>
+                    <span class="btn-icon-wrapper" style="width: 30px; height: 30px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            
+            <!-- TARJETAS DE INVITADOS (SIN SCROLL HORIZONTAL Y 100% RESPONSIVE) -->
+            <div class="table-card" style="margin-bottom: 25px;">
+                <div id="guests-cards-container" class="guests-cards-grid">
+                    <div class="table-empty-state">Buscando lista en los archivos reales...</div>
+                </div>
+                
+                <!-- PAGINACIÓN IMPERIAL -->
+                <div id="admin-pagination" class="pagination-container"></div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <!-- Generador de PDF en Cliente (Cargado dinámicamente sólo aquí) -->
+    <script src="assets/vendor/jspdf.umd.min.js"></script>
+    <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
+    <script type="module" src="admin.js?v=64"></script>
+</body>
+</html>
